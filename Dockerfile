@@ -1,4 +1,4 @@
-FROM python:3.12.5-alpine3.20
+FROM python:3.12-alpine3.20
 LABEL mantainer="tiago.g.manoel@proton.me"
 
 # Essa variável de ambiente é usada para controlar se o Python deve 
@@ -35,8 +35,8 @@ RUN python -m venv /venv && \
   chown -R duser:duser /venv && \
   chown -R duser:duser /data/web/static && \
   chown -R duser:duser /data/web/media && \
-  chmod -R 755 /data/web/static && \
-  chmod -R 755 /data/web/media && \
+  chmod -R 777 /data/web/static && \
+  chmod -R 777 /data/web/media && \
   chmod -R +x /scripts
 
 # Adiciona a pasta scripts e venv/bin 
