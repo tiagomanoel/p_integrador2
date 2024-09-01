@@ -4,6 +4,7 @@
 gunicorn-error-log
 __localcode
 /data/
+/dev_teste/
 
 # Django #
 *.log
