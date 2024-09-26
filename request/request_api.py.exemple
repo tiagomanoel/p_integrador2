@@ -1,0 +1,52 @@
+import requests
+import xmltodict
+import psycopg2
+from datetime import date 
+from datetime import datetime
+import os
+
+#Put the database credentials between the "".
+conn = psycopg2.connect(database = "", 
+                        user = "", 
+                        host= '',
+                        password = "",
+                        port = 5432)
+
+def insert_db(currency, value):
+    cur = conn.cursor()
+    date_now = datetime.now()
+    date_now = date_now.strftime('%d/%m/%Y' ' - %H:%M')
+    cur.execute(f"INSERT INTO price_pi_db (currency, value, date) VALUES('{currency}','{value}','{date_now}')")
+    conn.commit()
+    cur.close()
+    # conn.close()
+
+def currency_names():
+    with open("currency.xml", "rb") as arq_currency:
+        currency = xmltodict.parse(arq_currency)
+    return(currency["xml"])
+
+def convertion_names():
+    with open("combination_currency.xml", "rb") as arq_combination:
+        combination = xmltodict.parse(arq_combination)
+    return(combination["xml"])    
+
+def convertion(origin_currency, destination_currency):
+    link = f"https://economia.awesomeapi.com.br/last/{origin_currency}-{destination_currency}"
+    coinRequest = requests.get(link)
+    return(coinRequest.json()[f"{origin_currency}{destination_currency}"]["bid"])
+while 1:
+    combination = convertion_names()
+    for comb in combination:
+        origin_currency, destination_currency = comb.split("-")
+        if origin_currency != destination_currency:
+            if destination_currency == "BRL":
+                value = convertion(origin_currency, destination_currency)
+                insert_db(comb, value)
+    os.system("sleep 3600")            
+conn.close()
+
+    
+
+
+
