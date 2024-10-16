@@ -1,4 +1,130 @@
-#table-prices {
-  overflow: scroll;
-  height: 900px;
+:root {
+  --arrow-bg: rgba(63, 40, 73, 0.219);
+  --arrow-icon: url(https://upload.wikimedia.org/wikipedia/commons/9/9d/Caret_down_font_awesome_whitevariation.svg);
+  --option-bg: rgba(63, 40, 73, 0.219);
+  --select-bg: rgba(63, 40, 73, 0.219);
+}
+
+body {
+  background: linear-gradient(35deg, rgb(0, 0, 0), rgb(63, 0, 63));
+  color: rgb(255, 255, 255);
+}
+
+.informacoes_basicas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  margin-right: auto;
+  border-image: linear-gradient(
+    to right top,
+    #bd31c4,
+    #8e3bb0,
+    #643b97,
+    #413579,
+    #282c59
+  );
+  border-image-slice: 1;
+  margin-left: 1%;
+}
+
+.icone {
+  color: #c040b9;
+  width: 40px;
+}
+.select_currency {
+  /* Reset */
+  appearance: none;
+  border: 0;
+  outline: 0;
+  font: inherit;
+  /* Personalize */
+  width: 15rem;
+  padding: 1rem 4rem 1rem 1rem;
+  background: var(--arrow-icon) no-repeat right 0.8em center / 1.4em,
+    linear-gradient(to left, var(--arrow-bg) 3em, var(--select-bg) 3em);
+  color: rgb(255, 255, 255);
+  border-radius: 0.25em;
+  box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  /* Remove IE arrow */
+  &::-ms-expand {
+    display: none;
+  }
+  /* Remove focus outline */
+  &:focus {
+    outline: none;
+  }
+  /* <option> colors */
+  option {
+    color: inherit;
+    background-color: var(--option-bg);
+  }
+}
+
+.select_currency:active {
+  /* Reset */
+  appearance: none;
+  border: 0;
+  outline: 0;
+  font: inherit;
+  /* Personalize */
+  width: 15rem;
+  padding: 1rem 4rem 1rem 1rem;
+  background: rgb(17, 0, 20);
+  background: linear-gradient(
+    180deg,
+    rgba(17, 0, 20, 0.7161239495798319) 4%,
+    rgba(119, 9, 121, 1) 100%
+  );
+  color: rgba(0, 0, 0, 0.507);
+  border-radius: 0.25em;
+  box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  /* Remove IE arrow */
+  &::-ms-expand {
+    display: none;
+  }
+  /* Remove focus outline */
+  &:focus {
+    outline: none;
+  }
+  /* <option> colors */
+  option {
+    color: inherit;
+    background-color: var(--option-bg);
+  }
+}
+
+.select_button {
+  /* Reset */
+  appearance: none;
+  border: 0;
+  outline: 0;
+  font: inherit;
+  /* Personalize */
+  width: 5rem;
+  padding: 1rem 4rem 1rem 1rem;
+  background: linear-gradient(
+    to left,
+    var(--arrow-bg) 3em,
+    var(--select-bg) 3em
+  );
+  color: rgb(253, 253, 253);
+  border-radius: 0.25em;
+  box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  /* Remove IE arrow */
+  &::-ms-expand {
+    display: none;
+  }
+  /* Remove focus outline */
+  &:focus {
+    outline: none;
+  }
+  /* <option> colors */
+  option {
+    color: inherit;
+    background-color: var(--option-bg);
+  }
 }
