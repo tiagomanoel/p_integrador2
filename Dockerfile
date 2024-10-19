@@ -38,7 +38,9 @@ RUN python -m venv /venv && \
   chown -R duser:duser /data/web/media && \
   chmod -R 777 /data/web/static && \
   chmod -R 777 /data/web/media && \
-  chmod -R +x /scripts
+  chmod -R +x /scripts && \
+  cp /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime 
+
 
 # Adiciona a pasta scripts e venv/bin 
 # no $PATH do container.

@@ -22,11 +22,11 @@ def pi_db_list(request):
 #Function that displays the main page.
 def index(request):
     if request.method == "GET":
-        prices = {'prices': pi_db.objects.filter(currency="USD-BRL").order_by('-id')}
+        prices = {'prices': pi_db.objects.filter(currency="USD-BRL").order_by('id')}
         return render(request, 'index.html', prices, )
     if request.method == "POST":
         choose = request.POST.get('currency')
-        prices = { 'prices': pi_db.objects.filter(currency=f"{choose}").order_by('-id')}
+        prices = { 'prices': pi_db.objects.filter(currency=f"{choose}").order_by('id')}
         return render(request, 'index.html', prices)
 
   

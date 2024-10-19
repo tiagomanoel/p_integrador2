@@ -6,7 +6,7 @@
 }
 
 body {
-  background: linear-gradient(35deg, rgb(0, 0, 0), rgb(63, 0, 63));
+  background: linear-gradient(35deg, rgb(0, 0, 0), rgb(32, 0, 32));
   color: rgb(255, 255, 255);
 }
 
@@ -16,15 +16,6 @@ body {
   align-items: center;
   height: 100px;
   margin-right: auto;
-  border-image: linear-gradient(
-    to right top,
-    #bd31c4,
-    #8e3bb0,
-    #643b97,
-    #413579,
-    #282c59
-  );
-  border-image-slice: 1;
   margin-left: 1%;
 }
 

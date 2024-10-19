@@ -24,7 +24,7 @@
             </svg>
                 <span id="faturamento_tota">
                     {% for price in prices %}
-                    {% if forloop.first %}
+                    {% if forloop.last %}
                         {{ price.date }}
                     {% endif %}
                     {% endfor %}
@@ -120,6 +120,7 @@
   <script src="{% static 'js/js.js' %}"></script>
 
   <script>
+
     const ctx = document.getElementById('price_chart').getContext('2d');
     var cores_price_chart = gera_cor(qtd=12)
     const myChart = new Chart(ctx, {
@@ -127,10 +128,10 @@
         data: {
                 labels: [{% for price in prices %}'{{ price.date }}',{% endfor %}],
                 datasets: [{
-                label: 'valor',
+                label: 'Maior Valor',
                 data: [{% for price in prices %}{{ price.value }},{% endfor %}],
-                backgroundColor: "#CB1EA8",
-                borderColor: "#FFFFFF",
+                backgroundColor: cores_price_chart[0],
+                borderColor: cores_price_chart[0],
                 borderWidth: 0.2
             }]
         },
