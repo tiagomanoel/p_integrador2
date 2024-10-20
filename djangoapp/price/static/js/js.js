@@ -1,155 +1,123 @@
-function gera_cor(qtd=1){
-    var bg_color = []
-    var border_color = []
-    for(let i = 0; i < qtd; i++){
-        let r = Math.random() * 255;
-        let g = Math.random() * 255;
-        let b = Math.random() * 255;
-        bg_color.push(`rgba(${r}, ${g}, ${b}, ${0.2})`)
-        border_color.push(`rgba(${r}, ${g}, ${b}, ${1})`)
+function gera_cor(qtd = 1) {
+  var bg_color = [];
+  var border_color = [];
+  for (let i = 0; i < qtd; i++) {
+    let r = Math.random() * 255;
+    let g = Math.random() * 255;
+    let b = Math.random() * 255;
+    bg_color.push(`rgba(${r}, ${g}, ${b}, ${0.2})`);
+    border_color.push(`rgba(${r}, ${g}, ${b}, ${1})`);
+  }
+  return [bg_color, border_color];
+}
+
+// Global variable to store the chart type
+let selectedGraphType = localStorage.getItem('selectedGraphType') || 'bar'; // Default type
+
+// Chart handler
+document.addEventListener("DOMContentLoaded", function () {
+  const ctx = document.getElementById("price_chart").getContext("2d");
+
+  function updateChart(type) {
+    if (window.myChart) {
+      window.myChart.destroy();
     }
-    
-    return [bg_color, border_color];
-    
-}
 
-function renderiza_total_vendido(url){  
-    fetch(url, {
-        method: 'get',
-    }).then(function(result){
-        return result.json()
-    }).then(function(data){
-        document.getElementById('faturamento_total').innerHTML = data.total
-    })
+    const colors = gera_cor(12);
 
-}
+    // Django data received by HTML
+    const labels = priceData.labels; // Dates
+    const data = priceData.data; // Corresponding values (assumed to be in pairs)
 
+    // Concatenate values of reais and centavos
+    const totalData = [];
 
+    for (let i = 0; i < data.length; i += 2) {
+      const reais = parseFloat(data[i]);
+      const centavos = i + 1 < data.length ? parseFloat(data[i + 1]) : 0;
 
-function renderiza_faturamento_mensal(url){
+      const total = reais + centavos / 100; // Converts centavos to reais
+      totalData.push({ date: labels[i / 2], value: total }); // Adds date and total
+    }
 
-    fetch(url, {
-        method: 'get',
-    }).then(function(result){
-        return result.json()
-    }).then(function(data){
+    // Sort the data by date (oldest to newest)
+    totalData.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-        const ctx = document.getElementById('faturamento_mensal').getContext('2d');
-        var cores_faturamento_mensal = gera_cor(qtd=12)
-        const myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-                datasets: [{
-                    label: data.labels,
-                    data: data.data,
-                    backgroundColor: cores_faturamento_mensal[0],
-                    borderColor: cores_faturamento_mensal[1],
-                    borderWidth: 1
-                }]
+    // Extract the sorted data
+    const sortedLabels = totalData.map(item => item.date);
+    const sortedValues = totalData.map(item => item.value);
+
+    if (sortedLabels.length === 0 || sortedValues.length === 0) {
+      console.error("Labels or data are empty");
+      return; // Prevents chart creation if there is no data
+    }
+
+    window.myChart = new Chart(ctx, {
+      type: type,
+      data: {
+        labels: sortedLabels,
+        datasets: [
+          {
+            label: "Highest Value",
+            data: sortedValues,
+            backgroundColor: colors[0],
+            borderColor: colors[0],
+            borderWidth: 2,
+          },
+        ],
+      },
+      options: {
+        scales: {
+          y: {
+            title: {
+              display: true,
+              text: 'Value',
             },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-
-
-    })
-
-
-    
-
-}
-
-
-
-function renderiza_despesas_mensal(url){
-    fetch(url, {
-        method: 'get',
-    }).then(function(result){
-        return result.json()
-    }).then(function(data){
-        console.log(data)
-        const ctx = document.getElementById('despesas_mensal').getContext('2d');
-        var cores_despesas_mensal = gera_cor(qtd=12)
-        const myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-                datasets: [{
-                    label: [data.date],
-                    data: [data.value],
-                    backgroundColor: "#CB1EA8",
-                    borderColor: "#FFFFFF",
-                    borderWidth: 0.2
-                }]
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Date',
             },
-            
-        });
-    })    
-}
+          },
+        },
+      },
+    });
+  }
 
-function renderiza_produtos_mais_vendidos(url){
+  // Initializes the chart when the page loads.
+  updateChart(selectedGraphType);
 
-    fetch(url, {
-        method: 'get',
-    }).then(function(result){
-        return result.json()
-    }).then(function(data){
-        
-        const ctx = document.getElementById('produtos_mais_vendidos').getContext('2d');
-        var cores_produtos_mais_vendidos = gera_cor(qtd=4)
-        const myChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: data.value,
-                datasets: [{
-                    label: 'Despesas',
-                    data: data.data,
-                    backgroundColor: cores_produtos_mais_vendidos[0],
-                    borderColor: cores_produtos_mais_vendidos[1],
-                    borderWidth: 1
-                }]
-            },
-            
-        });
+  // Updates the chart when the selection changes.
+  document.getElementById("graphSelect").addEventListener("change", function () {
+    selectedGraphType = this.value; // Updates the variable with the selected type.
+    localStorage.setItem('selectedGraphType', selectedGraphType); // Stores in localStorage.
+    updateChart(selectedGraphType);
+  });
 
+  // Logic for the currency form.
+  const currencySelect = document.getElementById("currencySelect");
 
-    })
+  // Adds an event to automatically submit the form.
+  currencySelect.addEventListener("change", function () {
+    this.form.submit(); // Sends the form.
+  });
+});
+
+// Retrieve and set the last selected chart type
+document.addEventListener("DOMContentLoaded", function () {
+  const graphSelect = document.getElementById("graphSelect");
+  const lastSelectedGraph = localStorage.getItem('selectedGraphType');
   
-}
+  if (lastSelectedGraph) {
+    graphSelect.value = lastSelectedGraph; // Sets the selection in the dropdown.
+    updateChart(lastSelectedGraph); // Updates the chart with the last selection.
+  }
 
-function renderiza_funcionario_mes(url){
-
-
-
-    fetch(url, {
-        method: 'get',
-    }).then(function(result){
-        return result.json()
-    }).then(function(data){
-        
-        const ctx = document.getElementById('funcionarios_do_mes').getContext('2d');
-        var cores_funcionarios_do_mes = gera_cor(qtd=4)
-        const myChart = new Chart(ctx, {
-            type: 'polarArea',
-            data: {
-                labels: data.labels,
-                datasets: [{
-                    data: data.data,
-                    backgroundColor: cores_funcionarios_do_mes[0],
-                    borderColor: cores_funcionarios_do_mes[1],
-                    borderWidth: 1
-                }]
-            },
-            
-        });
-
-
-    })
-
-}
+  // Updates the chart when the selection changes.
+  graphSelect.addEventListener("change", function () {
+    const selectedGraph = this.value;
+    localStorage.setItem('selectedGraphType', selectedGraph); // Stores the new selection.
+    updateChart(selectedGraph); // Updates the chart
+  });
+});
