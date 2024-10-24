@@ -176,7 +176,7 @@ Contributions are welcome! If you'd like to enhance this project, please follow 
 For inquiries or further information, feel free to reach out:
 
 - **Email**: tiago.g.manoel@proton.me
-- **GitHub**: [Your GitHub Profile](https://github.com/tiagomanoel/p_integrador2)
+- **GitHub**: [Tiago Giglia Manoel](https://github.com/tiagomanoel/p_integrador2)
 
 ---
 
