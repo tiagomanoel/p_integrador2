@@ -1,0 +1,95 @@
+:root {
+    --bg-color: linear-gradient(35deg, rgb(0, 0, 0), rgb(32, 0, 32));
+    --card-bg: rgba(63, 40, 73, 0.85); /* Card background color */
+    --text-light: rgba(255, 255, 255, 0.9); /* Light text */
+    --text-muted: rgba(255, 255, 255, 0.7); /* Muted text */
+    --highlight-color: #c040b9; /* Highlight color */
+    --button-bg: rgba(77, 29, 77, 0.8); /* Back button background color */
+}
+
+body {
+    background: var(--bg-color);
+    color: var(--text-light);
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+.card {
+    background-color: var(--card-bg);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s, box-shadow 0.3s;
+    opacity: 0; /* Start invisible */
+}
+
+.card.show {
+    opacity: 1; /* Become visible */
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Fade-in effect */
+.fade-in {
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.fade-in.show {
+    opacity: 1;
+}
+
+/* Main titles */
+h1 {
+    text-align: center;
+    color: var(--highlight-color);
+    margin: 20px 0;
+}
+
+h2 {
+    text-align: center;
+    color: var(--text-light);
+}
+
+/* Card container */
+.card-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 15px;
+}
+
+p, ul li {
+    color: var(--text-muted);
+}
+
+/* Back button */
+.btn-voltar {
+    display: block;
+    margin: 30px auto;
+    background-color: var(--highlight-color);
+    color: white;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.btn-voltar:hover {
+    background-color: rgba(192, 64, 185, 1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsiveness adjustment */
+@media (max-width: 768px) {
+    .card-container {
+       

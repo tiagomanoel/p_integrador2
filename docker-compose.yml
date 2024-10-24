@@ -1,26 +1,28 @@
-version: '2.29'
+version: '2.29'  # Docker Compose file version.
 
-services:
-  djangoapp:
-    container_name: djangoapp
-    build:
-      context: .
-    ports:
-      - 8000:8000
-    volumes:
-      - ./djangoapp:/djangoapp
-      - ./data/web/static:/data/web/static/
-      - ./data/web/media:/data/web/media/
-    env_file:
-      - ./dotenv_files/.env
-    depends_on:
-      - psql
-  psql:
-    container_name: psql
-    image: postgres:15-alpine
-    ports:
-      - 5432:5432
-    volumes:
-      - ./data/postgres/data:/var/lib/postgresql/data/
-    env_file:
-      - ./dotenv_files/.env
+services:  # Define services (containers).
+
+  djangoapp:  # Django application service.
+    container_name: djangoapp  # Container name.
+    build:  # Build configuration.
+      context: .  # Build context (current directory).
+    ports:  # Port mapping.
+      - 8000:8000  # Map host port 8000 to container port 8000.
+    volumes:  # Volume mounts.
+      - ./djangoapp:/djangoapp  # Mount app directory.
+      - ./data/web/static:/data/web/static/  # Mount static files directory.
+      - ./data/web/media:/data/web/media/  # Mount media files directory.
+    env_file:  # Environment variable file.
+      - ./dotenv_files/.env  # Path to environment file.
+    depends_on:  # Service dependencies.
+      - psql  # Wait for PostgreSQL service.
+
+  psql:  # PostgreSQL database service.
+    container_name: psql  # Container name.
+    image: postgres:15-alpine  # Official PostgreSQL image, version 15.
+    ports:  # Port mapping for PostgreSQL.
+      - 5432:5432  # Map host port 5432 to container port 5432.
+    volumes:  # Volume mounts for data persistence.
+      - ./data/postgres/data:/var/lib/postgresql/data/  # Mount PostgreSQL data directory.
+    env_file:  # Environment variable file for PostgreSQL.
+      - ./dotenv_files/.env  # Path to environment file.

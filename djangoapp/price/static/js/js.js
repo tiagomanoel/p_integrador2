@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const colors = gera_cor(12);
 
-    // Django data received by HTML
+    // Django data received from HTML
     const labels = priceData.labels; // Dates
     const data = priceData.data; // Corresponding values (assumed to be in pairs)
 
@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Adds an event to automatically submit the form.
   currencySelect.addEventListener("change", function () {
-    this.form.submit(); // Sends the form.
+    this.form.submit(); // Submits the form.
   });
 });
 

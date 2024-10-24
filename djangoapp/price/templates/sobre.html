@@ -1,0 +1,94 @@
+{% extends 'base.html' %}  <!-- Extends the base HTML template -->
+{% load static %}  <!-- Loads static files for use in the template -->
+
+{% block 'titulo' %}Dashboard{% endblock %}  <!-- Sets the page title to 'Dashboard' -->
+
+{% block 'head' %}
+<link rel="stylesheet" href="{% static 'css/sobre.css' %}">  <!-- Links to a custom CSS file for styling -->
+{% endblock %}
+
+{% block 'body' %}
+<div class="loading-overlay">  <!-- Loading overlay that shows while the page is loading -->
+    <div class="loader"></div>  <!-- Loader animation element -->
+</div>
+
+<div class="container fade-in" style="display: none;">  <!-- Main container for the page content, initially hidden -->
+    <h1>Sobre a Aplicação</h1>  <!-- Main heading for the application description -->
+    <p>This web application was developed to provide updated data on currency quotes in Brazilian Real (BRL), showing a brief history of these values. The application's design aims to be simple and objective, with agile performance to ensure an excellent user experience.</p>
+
+    <div class="card-container">  <!-- Container for the feature cards -->
+        <div class="card" id="funcionalidades">  <!-- Card for application features -->
+            <h2>Funcionalidades</h2>  <!-- Subtitle for functionalities -->
+            <ul>  <!-- Unordered list of functionalities -->
+                <li><strong>Real-Time Visualization:</strong> Quotes are updated in real time, ensuring users have access to the latest information.</li>
+                <li><strong>Quote History:</strong> Users can view a history of quotes, allowing for trend analysis over time.</li>
+                <li><strong>Intuitive Interface:</strong> The layout is designed to be simple and direct, facilitating navigation and access to information.</li>
+            </ul>
+        </div>
+
+        <div class="card" id="tecnologias">  <!-- Card for technologies used -->
+            <h2>Tecnologias Utilizadas</h2>  <!-- Subtitle for technologies -->
+            <h3>Django</h3>  <!-- Subheading for Django -->
+            <p>Django is a high-level web framework in Python that promotes rapid development and clean, pragmatic design. Advantages include:</p>
+            <ul>  <!-- Advantages of using Django -->
+                <li>Solid Project Structure</li>
+                <li>Efficient Security</li>
+                <li>Scalability</li>
+            </ul>
+
+            <h3>Django REST Framework</h3>  <!-- Subheading for Django REST Framework -->
+            <p>The DRF is a powerful library for building web APIs with Django, allowing:</p>
+            <ul>  <!-- Advantages of using DRF -->
+                <li>Fast API building</li>
+                <li>Data Serialization</li>
+                <li>Authentication and Permissions</li>
+            </ul>
+        </div>
+
+        <div class="card" id="hospedagem">  <!-- Card for hosting -->
+            <h2>Hospedagem em Servidor Próprio</h2>  <!-- Subtitle for hosting -->
+            <p>The application is hosted on a private server, using Proxmox to virtualize the latest Ubuntu Server. Advantages include:</p>
+            <ul>  <!-- Advantages of using a private server -->
+                <li>Flexibility in virtualization</li>
+                <li>Centralized management</li>
+                <li>Quick recovery of virtual machines</li>
+            </ul>
+        </div>
+
+        <div class="card" id="usabilidade">  <!-- Card for usability -->
+            <h2>Simplicidade e Usabilidade</h2>  <!-- Subtitle for simplicity and usability -->
+            <p>The application was designed with a simple and clean layout, providing:</p>
+            <ul>  <!-- Benefits of the design -->
+                <li>User Focus</li>
+                <li>Responsiveness</li>
+                <li>Ease of Navigation</li>
+            </ul>
+            <p>In summary, this application combines the robustness of Django, the flexibility of Django REST Framework, and the efficiency of hosting on a private server to provide a scalable and high-performance solution.</p>
+        </div>
+    </div>
+
+    <button class="btn-voltar" onclick="window.history.back()">Voltar</button>  <!-- Button to go back to the previous page -->
+</div>
+
+<script>
+    // Remove the loading overlay after the page is loaded
+    window.addEventListener('load', function() {
+        document.querySelector('.loading-overlay').style.display = 'none';  // Hides the loading overlay
+        const container = document.querySelector('.container');
+        container.style.display = 'block';  // Shows the main content container
+
+        // Add the 'show' class to start the fade-in effect for the container
+        setTimeout(() => {
+            container.classList.add('show');
+        }, 50);  // Brief delay to ensure CSS is applied
+
+        // Fade-in effect for each card individually
+        const cards = document.querySelectorAll('.card');
+        cards.forEach((card, index) => {
+            setTimeout(() => {
+                card.classList.add('show');  // Adds fade-in class to each card
+            }, index * 300);  // Delay of 300ms between each card's fade-in
+        });
+    });
+</script>
+{% endblock %}

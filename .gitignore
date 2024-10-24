@@ -6,6 +6,7 @@ __localcode
 /data/
 request_api.py
 /djangoapp/price/tests.py
+request_local.py
 
 # Django #
 *.log

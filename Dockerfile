@@ -1,55 +1,51 @@
 FROM python:3.12-alpine3.20
-LABEL mantainer="tiago.g.manoel@proton.me"
+LABEL maintainer="tiago.g.manoel@proton.me"
 
-# Essa variável de ambiente é usada para controlar se o Python deve 
-# gravar arquivos de bytecode (.pyc) no disco. 1 = Não, 0 = Sim
+# Prevent Python from writing .pyc files
 ENV PYTHONDONTWRITEBYTECODE 1
 
-# Define que a saída do Python será exibida imediatamente no console ou em 
-# outros dispositivos de saída, sem ser armazenada em buffer.
-# Em resumo, você verá os outputs do Python em tempo real.
+# Enable immediate output from Python (no buffering)
 ENV PYTHONUNBUFFERED 1
 
-# Copia a pasta "djangoapp" e "scripts" para dentro do container.
+# Copy application and script directories into the container
 COPY djangoapp /djangoapp
 COPY scripts /scripts
-COPY request /scripts
+COPY request /scripts/request
 
-# Entra na pasta djangoapp no container
+# Set the working directory
 WORKDIR /djangoapp
 
-# A porta 8000 estará disponível para conexões externas ao container
-# É a porta que vamos usar para o Django.
+# Expose port 8000 for Django application
 EXPOSE 8000
 
-# RUN executa comandos em um shell dentro do container para construir a imagem. 
-# O resultado da execução do comando é armazenado no sistema de arquivos da 
-# imagem como uma nova camada.
-# Agrupar os comandos em um único RUN pode reduzir a quantidade de camadas da 
-# imagem e torná-la mais eficiente.
-RUN python -m venv /venv && \
-  /venv/bin/pip install --upgrade pip && \
-  /venv/bin/pip install -r /djangoapp/requirements.txt && \
-  adduser --disabled-password --no-create-home duser && \
-  mkdir -p /data/web/static && \
-  mkdir -p /data/web/media && \
-  chown -R duser:duser /venv && \
-  chown -R duser:duser /data/web/static && \
-  chown -R duser:duser /data/web/media && \
-  chmod -R 777 /data/web/static && \
-  chmod -R 777 /data/web/media && \
-  chmod -R +x /scripts && \
-  cp /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime 
+# Install necessary packages and set up the environment
+RUN apk update && apk add --no-cache dcron bash sudo \
+    && echo "* * * * * /venv/bin/python3 /scripts/request/request_api.py" | crontab - \
+    && mkdir -p /var/log/cron \
+    && touch /var/log/cron/cron.log \
+    && python -m venv /venv && \
+    /venv/bin/pip install --upgrade pip && \
+    /venv/bin/pip install -r /djangoapp/requirements.txt && \
+    adduser --disabled-password --no-create-home duser && \
+    addgroup duser wheel && \
+    echo "duser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
+    mkdir -p /data/web/static && \
+    mkdir -p /data/web/media && \
+    chown -R duser:duser /venv && \
+    chown -R duser:duser /data/web/static && \
+    chown -R duser:duser /data/web/media && \
+    chmod -R 777 /data/web/static && \
+    chmod -R 777 /data/web/media && \
+    chmod -R 777 /scripts && \
+    chmod -R +x /scripts && \
+    chmod +x /scripts/request/request_api.py && \
+    cp /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
 
-
-# Adiciona a pasta scripts e venv/bin 
-# no $PATH do container.
+# Add script and virtual environment bin directories to PATH
 ENV PATH="/scripts:/venv/bin:$PATH"
 
-# Muda o usuário para duser
+# Switch to non-root user
 USER duser
 
-# Executa o arquivo scripts/commands.sh
+# Execute the command script
 CMD ["commands.sh"]
-
-

@@ -1,52 +1,54 @@
-import requests
-import xmltodict
-import psycopg2
-from datetime import date 
-from datetime import datetime
-import os
+import requests  # Library for making HTTP requests
+import xmltodict  # Library for parsing XML data into Python dictionaries
+import psycopg2  # PostgreSQL adapter for Python
+from datetime import datetime  # Module for working with dates and times
+import os  # Module for interacting with the operating system
 
-#Put the database credentials between the "".
-conn = psycopg2.connect(database = "", 
-                        user = "", 
-                        host= '',
-                        password = "",
-                        port = 5432)
+# Database connection setup - fill in your database credentials
+conn = psycopg2.connect(
+    database="",  # Name of the database
+    user="",      # Database user
+    host='',      # Host where the database is located
+    password="",  # User's password
+    port=5432     # Port number for the database connection
+)
 
 def insert_db(currency, value):
-    cur = conn.cursor()
-    date_now = datetime.now()
-    date_now = date_now.strftime('%d/%m/%Y' ' - %H:%M')
-    cur.execute(f"INSERT INTO price_pi_db (currency, value, date) VALUES('{currency}','{value}','{date_now}')")
-    conn.commit()
-    cur.close()
-    # conn.close()
+    """Inserts the currency data into the database."""
+    cur = conn.cursor()  # Create a cursor object to interact with the database
+    date_now = datetime.now()  # Get the current date and time
+    date_now = date_now.strftime('%d/%m/%Y - %H:%M')  # Format the date and time
+    # Execute the SQL command to insert the currency data
+    cur.execute(f"INSERT INTO price_pi_db (currency, value, date) VALUES('{currency}', '{value}', '{date_now}')")
+    conn.commit()  # Commit the transaction to the database
+    cur.close()  # Close the cursor
+    # conn.close()  # Uncomment if you want to close the connection after each insert
 
 def currency_names():
+    """Reads currency names from an XML file and returns them as a dictionary."""
     with open("currency.xml", "rb") as arq_currency:
-        currency = xmltodict.parse(arq_currency)
-    return(currency["xml"])
+        currency = xmltodict.parse(arq_currency)  # Parse the XML file into a dictionary
+    return currency["xml"]  # Return the parsed XML data
 
 def convertion_names():
+    """Reads currency combination names from an XML file and returns them as a dictionary."""
     with open("combination_currency.xml", "rb") as arq_combination:
-        combination = xmltodict.parse(arq_combination)
-    return(combination["xml"])    
+        combination = xmltodict.parse(arq_combination)  # Parse the XML file into a dictionary
+    return combination["xml"]  # Return the parsed XML data    
 
 def convertion(origin_currency, destination_currency):
-    link = f"https://economia.awesomeapi.com.br/last/{origin_currency}-{destination_currency}"
-    coinRequest = requests.get(link)
-    return(coinRequest.json()[f"{origin_currency}{destination_currency}"]["bid"])
-while 1:
-    combination = convertion_names()
-    for comb in combination:
-        origin_currency, destination_currency = comb.split("-")
-        if origin_currency != destination_currency:
-            if destination_currency == "BRL":
-                value = convertion(origin_currency, destination_currency)
-                insert_db(comb, value)
-    os.system("sleep 3600")            
-conn.close()
+    """Fetches the conversion rate between two currencies from an external API."""
+    link = f"https://economia.awesomeapi.com.br/last/{origin_currency}-{destination_currency}"  # API endpoint
+    coinRequest = requests.get(link)  # Send a GET request to the API
+    return coinRequest.json()[f"{origin_currency}{destination_currency}"]["bid"]  # Return the bid price from the response
 
-    
-
-
-
+# Get the currency combinations from the XML file
+combination = convertion_names()
+for comb in combination:
+    # Split the combination into origin and destination currencies
+    origin_currency, destination_currency = comb.split("-")
+    # Ensure the currencies are different and the destination is BRL
+    if origin_currency != destination_currency and destination_currency == "BRL":
+        # Get the conversion value and insert it into the database
+        value = convertion(origin_currency, destination_currency)
+        insert_db(comb, value)  # Store the conversion data in the database
