@@ -25,7 +25,7 @@
         </svg>
         <span id="faturamento_total">
             {% for price in prices %} 
-              {% if forloop.last %} 
+              {% if forloop.first %} 
                 {{ price.date|slice:":10" }}  <!-- Exibe apenas os primeiros 10 caracteres (a data) -->
               {% endif %} 
             {% endfor %}
