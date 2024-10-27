@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
         labels: sortedLabels,
         datasets: [
           {
-            label: "Highest Value",
+            label: "Maior Valor",
             data: sortedValues,
             backgroundColor: colors[0],
             borderColor: colors[0],
@@ -71,13 +71,13 @@ document.addEventListener("DOMContentLoaded", function () {
           y: {
             title: {
               display: true,
-              text: 'Value',
+              text: 'Valor',
             },
           },
           x: {
             title: {
               display: true,
-              text: 'Date',
+              text: 'Data',
             },
           },
         },

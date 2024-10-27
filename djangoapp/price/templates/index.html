@@ -1,19 +1,16 @@
-{% extends 'base.html' %}  <!-- Extends the base HTML template -->
-{% load static %}  <!-- Loads static files for use in the template -->
-
-{% block 'titulo' %}Dashboard{% endblock %}  <!-- Sets the page title to 'Dashboard' -->
-
+{% extends 'base.html' %}
+{% load static %}
+{% block 'titulo' %}Dashboard{%endblock %}
 {% block 'head' %}
-{% endblock %}  <!-- Placeholder for additional head elements in child templates -->
-
+{% endblock %}
 {% block 'body' %}
-<div class="container">  <!-- Main container for the content -->
+<div class="container">
   <br />
-  <div class="row">  <!-- Row for layout -->
-    <div class="col-md informacoes_basicas">  <!-- Column for basic information -->
+  <div class="row">
+    <div class="col-md informacoes_basicas">
       <h1>
         <svg
-          class="icone"  <!-- SVG icon for the header -->
+          class="icone"
           xmlns="http://www.w3.org/2000/svg"
           fill="currentColor"
           class="bi bi-calendar-check"
@@ -26,29 +23,28 @@
             d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"
           />
         </svg>
-        <span id="faturamento_total">  <!-- Span for displaying the total revenue date -->
+        <span id="faturamento_total">
             {% for price in prices %} 
               {% if forloop.last %} 
-                {{ price.date|slice:":10" }}  <!-- Displays only the first 10 characters (the date) -->
+                {{ price.date|slice:":10" }}  <!-- Exibe apenas os primeiros 10 caracteres (a data) -->
               {% endif %} 
             {% endfor %}
           </span>
       </h1>
     </div>
 
-    <div class="col-md informacoes_basicas">  <!-- Another column for additional information -->
-      <form action="" method="POST" enctype="multipart/form-data">  <!-- Form for currency selection -->
-        {% csrf_token %}  <!-- CSRF protection token -->
+    <div class="col-md informacoes_basicas">
+      <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
         <select
           name="currency"
           required="required"
           class="select_currency"
           id="currencySelect"
         >
-          <option value="">  <!-- Default option -->
+          <option value="">
             {% for price in prices %}{% if forloop.first %}{{ price.currency }}{% endif %}{% endfor %}
           </option>
-          <!-- Currency options -->
           <option value="USD-BRL">Dólar Americano/Real Brasileiro</option>
           <option value="CAD-BRL">Dólar Canadense/Real Brasileiro</option>
           <option value="EUR-BRL">Euro/Real Brasileiro</option>
@@ -66,19 +62,18 @@
           <option value="DOGE-BRL">Dogecoin/Real Brasileiro</option>
         </select>
       </form>
-
-      <form id="graphForm">  <!-- Form for selecting the graph type -->
+      <form id="graphForm">
         <select id="graphSelect" required="required" class="select_currency_graph">
-          <option value="bar">Bar</option>  <!-- Graph type options -->
+          <option value="bar">Bar</option>
           <option value="line">Line</option>
           <option value="doughnut">Doughnut</option>
         </select>
       </form>
     </div>
 
-    <div class="col-md informacoes_basicas">  <!-- Column for displaying the total amount -->
+    <div class="col-md informacoes_basicas">
       <svg
-        class="icone"  <!-- SVG icon for displaying currency -->
+        class="icone"
         xmlns="http://www.w3.org/2000/svg"
         fill="currentColor"
         class="bi bi-cash-coin"
@@ -104,36 +99,39 @@
     </div>
   </div>
 
-  <div class="row">  <!-- Row for the chart -->
+  <div class="row">
+
+
     <div class="col-md">
       <br />
-      <canvas id="price_chart" width="250" height="140"></canvas>  <!-- Canvas element for the chart -->
+      <canvas id="price_chart" width="250" height="140"></canvas>
     </div>
   </div>
 </div>
 <br />
 
-<footer class="container fade-in">  <!-- Footer section with fade-in effect -->
+<footer class="container fade-in">
   <div class="footer">
     <ul>
-      <li><a href="{% url 'price:pji' %}">PJI-II Sala 001 - Grupo 006.</a></li>  <!-- Links in the footer -->
+      <li><a href="{% url 'price:pji' %}">PJI-II Sala 001 - Grupo 006.</a></li>
       <li><a href="{% url 'price:sobre' %}">Sobre</a></li>
       <li><a href="https://github.com/tiagomanoel/p_integrador2">Github</a></li>
-      <li><p>👋</p></li>  <!-- Emoji for visual appeal -->
+      <li><p>👋</p></li>
     </ul>
   </div>
 </footer>
 
-<!-- Import Chart.js for chart functionalities -->
+
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="{% static 'js/js.js' %}"></script>  <!-- Custom JavaScript file -->
+<script src="{% static 'js/js.js' %}"></script>
 
 <script>
-  // Passing data from Django to JavaScript
+  // Passando dados do Django para o JavaScript
   const priceData = {
-      labels: [{% for data in prices %}'{{ data.date }}'{% if not forloop.last %},{% endif %}{% endfor %}],  // Dates for the labels of the chart
-      data: [{% for price in prices %}{{ price.value|floatformat:2 }}{% if not forloop.last %},{% endif %}{% endfor %}]  // Values for the chart
+      labels: [{% for data in prices %}'{{ data.date }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+      data: [{% for price in prices %}{{ price.value|floatformat:2 }}{% if not forloop.last %},{% endif %}{% endfor %}]
   };
 </script>
 
-{% endblock %}  <!-- End of the body block -->
+{% endblock %}

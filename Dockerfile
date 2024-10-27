@@ -20,7 +20,7 @@ EXPOSE 8000
 
 # Install necessary packages and set up the environment
 RUN apk update && apk add --no-cache dcron bash sudo \
-    && echo "* * * * * /venv/bin/python3 /scripts/request/request_api.py" | crontab - \
+    && echo "0 */3 * * * /venv/bin/python3 /scripts/request/request_api.py" | crontab - \
     && mkdir -p /var/log/cron \
     && touch /var/log/cron/cron.log \
     && python -m venv /venv && \

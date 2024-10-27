@@ -28,3 +28,4 @@ python manage.py runserver 0.0.0.0:8000 &
 # Start the cron daemon in the foreground with specific logging settings
 exec sudo crond -f -l 8 -L /var/log/cron/cron.log
 
+

@@ -1,4 +1,4 @@
-Sure! Here’s the entire `README.md` content in a single code block:
+Aqui está o conteúdo completo do `README.md` com as instruções integradas, permitindo que o usuário defina o local do projeto ao configurar a execução automática usando `systemd`:
 
 ```markdown
 # 📚 Projeto Integrador - UNIVESP (PJI)
@@ -52,54 +52,18 @@ The primary objectives of the PJI include:
 
 The PJI leverages a modern tech stack to ensure reliability, performance, and maintainability. Below are the primary technologies used in the development of the application:
 
-### 1. **Django**
-
-- A high-level Python web framework that promotes rapid development and clean, pragmatic design.
-- Benefits include:
-  - **Robust ORM**: Efficient database interactions without the need for complex SQL queries.
-  - **Admin Interface**: Automatically generated admin panels for easy content management.
-  - **Security**: Built-in protections against common web vulnerabilities such as SQL injection and cross-site scripting (XSS).
-
-### 2. **Django REST Framework (DRF)**
-
-- A powerful toolkit for building Web APIs in Django.
-- Key Features:
-  - **Serialization**: Converting complex data types such as querysets into JSON or XML for easy consumption.
-  - **Authentication**: Support for various authentication schemes, including token-based and session-based authentication.
-  - **Browsable API**: A user-friendly interface for testing API endpoints.
-
-### 3. **PostgreSQL**
-
-- An advanced, open-source relational database management system.
-- Advantages:
-  - **Scalability**: Can handle large datasets efficiently.
-  - **ACID Compliance**: Ensures reliable transactions.
-  - **Extensibility**: Supports custom data types and functions.
-
-### 4. **Docker**
-
-- Containerization technology that allows developers to package applications and their dependencies into a single container.
-- Benefits:
-  - **Consistency**: Eliminates issues related to environment differences across development, testing, and production.
-  - **Isolation**: Each container runs independently, ensuring that applications do not interfere with one another.
-
-### 5. **Bootstrap**
-
-- A front-end framework for developing responsive and mobile-first websites.
-- Features:
-  - **Predefined Components**: Ready-to-use components such as buttons, modals, and navigation bars.
-  - **Grid System**: Flexible grid layout for responsive designs.
-
-### 6. **XML and JSON**
-
-- Formats used for data interchange.
-- The application uses XML to parse currency data from external sources and JSON to communicate with the frontend.
+- **Django**: High-level Python web framework.
+- **Django REST Framework (DRF)**: Toolkit for building Web APIs.
+- **PostgreSQL**: Open-source relational database.
+- **Docker**: Containerization for consistent environments.
+- **Bootstrap**: Front-end framework for responsive design.
+- **XML and JSON**: Formats for data interchange.
 
 ---
 
 ## 📊 Data Sources
 
-The application relies on external APIs to fetch real-time currency data. Specifically, the **AwesomeAPI** is utilized to provide reliable and updated exchange rates, ensuring accuracy for the end-users.
+The application relies on external APIs like **AwesomeAPI** to fetch real-time currency data, ensuring accuracy for users.
 
 ---
 
@@ -107,11 +71,9 @@ The application relies on external APIs to fetch real-time currency data. Specif
 
 ### Prerequisites
 
-To run the application locally, ensure you have the following installed:
-
-- **Docker**: For containerization of the application.
-- **Docker Compose**: For managing multi-container Docker applications.
-- **Python 3.12+** (if not using Docker).
+- **Docker**
+- **Docker Compose**
+- **Python 3.12+** (if not using Docker)
 
 ### Installation Steps
 
@@ -124,9 +86,7 @@ To run the application locally, ensure you have the following installed:
 
 2. **Create a `.env` File**
 
-   Define your environment variables in a `.env` file at the root of the project:
-
-   ```
+   ```bash
    POSTGRES_HOST=psql
    POSTGRES_PORT=5432
    POSTGRES_USER=your_user
@@ -135,11 +95,9 @@ To run the application locally, ensure you have the following installed:
 
 3. **Edit the `request_api.py` File**
 
-   - Open `scripts/request/request_api.py` and configure any necessary settings, such as API keys or endpoints, as needed for your specific use case.
+   - Configure API settings in `scripts/request/request_api.py` as needed.
 
 4. **Build the Docker Containers**
-
-   Use Docker Compose to build the application containers:
 
    ```bash
    docker-compose up --build
@@ -147,33 +105,121 @@ To run the application locally, ensure you have the following installed:
 
 5. **Run the Django Application**
 
-   After building the containers, run the Django application with the following command:
-
    ```bash
    docker-compose run djangoapp python manage.py runserver
    ```
 
 6. **Access the Application**
 
-   Navigate to `http://localhost:8000` in your web browser to access the application.
+   Navigate to `http://localhost:8000`.
+
+---
+
+## 🛠️ Configuring Automatic Execution with `systemd`
+
+### Step 1: Create a Startup Script
+
+1. Navigate to the project directory (replace with your own path):
+
+   ```bash
+   cd /path/to/your/project/
+   ```
+
+2. Create the `start_project.sh` script:
+
+   ```bash
+   #!/bin/bash
+   cd /path/to/your/project/
+   docker-compose up -d
+   docker-compose run djangoapp python manage.py runserver
+   ```
+
+3. Make the script executable:
+
+   ```bash
+   sudo chmod +x /path/to/your/project/start_project.sh
+   ```
+
+### Step 2: Create a `systemd` Service
+
+1. Create a service file:
+
+   ```bash
+   sudo nano /etc/systemd/system/your_project.service
+   ```
+
+2. Add the following content (adjust paths accordingly):
+
+   ```ini
+   [Unit]
+   Description=Start Django and Docker Project
+   After=docker.service
+   Requires=docker.service
+
+   [Service]
+   Type=simple
+   ExecStart=/path/to/your/project/start_project.sh
+   WorkingDirectory=/path/to/your/project/
+   Restart=always
+   User=root
+
+   [Install]
+   WantedBy=multi-user.target
+   ```
+
+3. Save and exit the editor.
+
+### Step 3: Enable and Start the Service
+
+1. Reload the `systemd` configuration:
+
+   ```bash
+   sudo systemctl daemon-reload
+   ```
+
+2. Enable the service to start at boot:
+
+   ```bash
+   sudo systemctl enable your_project.service
+   ```
+
+3. Start the service manually:
+
+   ```bash
+   sudo systemctl start your_project.service
+   ```
+
+### Step 4: Check Service Status
+
+Check if the service is running:
+
+```bash
+sudo systemctl status your_project.service
+```
+
+If everything is set up correctly, the service should show as "active (running)."
+
+### Step 5: Reboot and Test
+
+After setting up the service, you can reboot the server to test:
+
+```bash
+sudo reboot
+```
 
 ---
 
 ## 🧑‍💻 Contributing
 
-Contributions are welcome! If you'd like to enhance this project, please follow these steps:
-
 1. Fork the repository.
 2. Create a new branch (`git checkout -b feature/YourFeature`).
-3. Make your changes and commit them (`git commit -m 'Add your feature'`).
+3. Make changes and commit (`git commit -m 'Add feature'`).
 4. Push to the branch (`git push origin feature/YourFeature`).
 5. Open a pull request.
 
 ---
 
 ## 📞 Contact
-
-For inquiries or further information, feel free to reach out:
 
 - **Email**: tiago.g.manoel@proton.me
 - **GitHub**: [Tiago Giglia Manoel](https://github.com/tiagomanoel/p_integrador2)
@@ -183,6 +229,7 @@ For inquiries or further information, feel free to reach out:
 ## 📝 License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
+```
 
 ---
 
