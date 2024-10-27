@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block 'titulo' %}Dashboard{%endblock %}
+{% block 'titulo' %}Price - Dashboard{%endblock %}
 {% block 'head' %}
 {% endblock %}
 {% block 'body' %}
@@ -115,6 +115,7 @@
     <ul>
       <li><a href="{% url 'price:pji' %}">PJI-II Sala 001 - Grupo 006.</a></li>
       <li><a href="{% url 'price:sobre' %}">Sobre</a></li>
+      <li><a href="{% url 'price:api' %}">Api</a></li>
       <li><a href="https://github.com/tiagomanoel/p_integrador2">Github</a></li>
       <li><p>👋</p></li>
     </ul>

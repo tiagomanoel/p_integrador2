@@ -1,4 +1,4 @@
-Aqui está o conteúdo completo do `README.md` com as instruções integradas, permitindo que o usuário defina o local do projeto ao configurar a execução automática usando `systemd`:
+Here’s the updated `README.md` with the available filters integrated into the API usage section. This includes a detailed list of currency options for filtering the API response:
 
 ```markdown
 # 📚 Projeto Integrador - UNIVESP (PJI)
@@ -115,6 +115,79 @@ The application relies on external APIs like **AwesomeAPI** to fetch real-time c
 
 ---
 
+## 📡 API Usage
+
+### Endpoint
+
+The base URL for accessing the API is:
+
+```
+http://127.0.0.1:8000/api/
+```
+
+To retrieve price data, you can use the following endpoint:
+
+```
+http://127.0.0.1:8000/api/?format=json
+```
+
+### Filtering Data
+
+You can filter the data by passing the `currency` parameter in the query string. Available currency options for filtering include:
+
+- **Dólar Americano/Real Brasileiro**: `USD-BRL`
+- **Dólar Canadense/Real Brasileiro**: `CAD-BRL`
+- **Euro/Real Brasileiro**: `EUR-BRL`
+- **Libra Esterlina/Real Brasileiro**: `GBP-BRL`
+- **Peso Argentino/Real Brasileiro**: `ARS-BRL`
+- **Bitcoin/Real Brasileiro**: `BTC-BRL`
+- **Litecoin/Real Brasileiro**: `LTC-BRL`
+- **Iene Japonês/Real Brasileiro**: `JPY-BRL`
+- **Franco Suíço/Real Brasileiro**: `CHF-BRL`
+- **Dólar Australiano/Real Brasileiro**: `AUD-BRL`
+- **Yuan Chinês/Real Brasileiro**: `CNY-BRL`
+- **Novo Shekel Israelense/Real Brasileiro**: `ILS-BRL`
+- **Ethereum/Real Brasileiro**: `ETH-BRL`
+- **XRP/Real Brasileiro**: `XRP-BRL`
+- **Dogecoin/Real Brasileiro**: `DOGE-BRL`
+
+For example, to get the most recent price for USD-BRL, use the following URL:
+
+```
+http://127.0.0.1:8000/api/?currency=USD-BRL&format=json
+```
+
+If you do not specify the `currency` parameter, the API will return the most recent 38 records for all currencies.
+
+### Response Format
+
+The API responds with data in JSON format. Here’s an example of a successful response:
+
+```json
+[
+    {
+        "id": 1,
+        "currency": "USD-BRL",
+        "price": 5.25,
+        "timestamp": "2024-10-27T12:00:00Z"
+    },
+    {
+        "id": 2,
+        "currency": "USD-BRL",
+        "price": 5.30,
+        "timestamp": "2024-10-26T12:00:00Z"
+    }
+]
+```
+
+### Response Fields
+- **id**: Unique identifier for the record.
+- **currency**: The currency type (e.g., USD-BRL).
+- **price**: The price value.
+- **timestamp**: The date and time when the price was recorded.
+
+---
+
 ## 🛠️ Configuring Automatic Execution with `systemd`
 
 ### Step 1: Create a Startup Script
@@ -228,8 +301,9 @@ sudo reboot
 
 ## 📝 License
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License. See the LICENSE
+
+ file for details.
 ```
 
----
 

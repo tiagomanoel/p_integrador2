@@ -23,8 +23,6 @@ document.addEventListener("DOMContentLoaded", function () {
       window.myChart.destroy();
     }
 
-    const colors = gera_cor(12);
-
     // Django data received from HTML
     const labels = priceData.labels; // Dates
     const data = priceData.data; // Corresponding values (assumed to be in pairs)
@@ -52,6 +50,9 @@ document.addEventListener("DOMContentLoaded", function () {
       return; // Prevents chart creation if there is no data
     }
 
+    // Generate unique colors for each data point
+    const colors = gera_cor(sortedValues.length);
+
     window.myChart = new Chart(ctx, {
       type: type,
       data: {
@@ -60,8 +61,8 @@ document.addEventListener("DOMContentLoaded", function () {
           {
             label: "Maior Valor",
             data: sortedValues,
-            backgroundColor: colors[0],
-            borderColor: colors[0],
+            backgroundColor: colors[0], // Unique background colors for each bar
+            borderColor: colors[1], // Unique border colors for each bar
             borderWidth: 2,
           },
         ],

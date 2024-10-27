@@ -6,14 +6,30 @@ from price.serializers import pi_dbSerializer
 from rest_framework.response import Response
 
 # Function that retrieves data from the database and makes it available in the API.
+from rest_framework.decorators import api_view
+from price.models import pi_db
+from price.serializers import pi_dbSerializer
+from rest_framework.response import Response
+
 @api_view(['GET'])  # Allows only GET requests for this view
 def pi_db_list(request):
-    # Query the database for records with the currency "USD-BRL" and order them by descending ID
-    list = pi_db.objects.filter(currency="USD-BRL").order_by('-id')
-    # Serialize the list of records to convert them into a format suitable for the API response
-    serializer = pi_dbSerializer(list, many=True)
+    # Get the 'currency' parameter from the query string; defaults to None if not present
+    currency = request.GET.get('currency', None)
+
+    if currency:
+        # If a currency parameter is provided, filter records by currency and return only the most recent one
+        record = pi_db.objects.filter(currency=currency).order_by('-id').first()
+        records = [record] if record else []  # Create a list only if the record exists
+    else:
+        # If no parameter is provided, return all records, limited to 38
+        records = pi_db.objects.all().order_by('-id')[:38]
+
+    # Serialize the list of records to convert them into a suitable format for the API response
+    serializer = pi_dbSerializer(records, many=True)
     # Return the serialized data as a JSON response
     return Response(serializer.data)
+
+
 
 # Function that displays the main page.
 def index(request):
